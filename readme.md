@@ -1,0 +1,1 @@
+text -source=text.txt -forbidden=forbidden.txt -result=res.txt -min_count=10

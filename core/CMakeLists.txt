@@ -1,0 +1,9 @@
+cmake_minimum_required(VERSION 3.28)
+project(core LANGUAGES CXX)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED YES)
+set(CMAKE_CXX_EXTENSIONS NO)
+
+add_library(${PROJECT_NAME} INTERFACE core.h)
+
