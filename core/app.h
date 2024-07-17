@@ -10,10 +10,10 @@ class AppRunner {
 public:
     AppRunner(int argc, char *argv[]) {
         strategies_ = {
-                {"source", [this](string_view str) mutable -> void { source_path_ = filesystem::absolute(str); }},
-                {"forbidden", [this](string_view str) mutable -> void { forbidden_path_ = filesystem::absolute(str); }},
-                {"result", [this](string_view str) mutable -> void { result_path_ = filesystem::absolute(str); }},
-                {"min_count", [this](string_view str) mutable -> void { min_count_ = stoi(string{str}); }},
+            {"source", [this](string_view str) mutable -> void { source_path_ = filesystem::absolute(str); }},
+            {"forbidden", [this](string_view str) mutable -> void { forbidden_path_ = filesystem::absolute(str); }},
+            {"result", [this](string_view str) mutable -> void { result_path_ = filesystem::absolute(str); }},
+            {"min_count", [this](string_view str) mutable -> void { min_count_ = stoi(string{str}); }},
         };
 
         for_each(argv + 1, argv + argc, [this](const char *ptr) {
@@ -74,9 +74,8 @@ private:
             copy(istream_iterator<string>{cin}, {}, it);
         }
 
-        //todo
         transform(forbidden.begin(), forbidden.end(), inserter(forbidden, forbidden.begin()), [](const string &s) {
-            return tolow(s);
+            return to_low(s);
         });
 
         return forbidden;

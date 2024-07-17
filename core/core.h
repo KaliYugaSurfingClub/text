@@ -5,7 +5,7 @@
 
 using namespace std;
 
-inline auto tolow = [](const string &str) {
+inline auto to_low = [](const string &str) {
     string res;
     res.reserve(str.size());
 
@@ -27,9 +27,7 @@ struct Sentence {
         regex exp{R"([^\W_]+(?:['_-][^\W_]+)*)"};
         regex_token_iterator it{str.begin(), str.end(), exp};
 
-        //todo
-        //copy(it, {}, inserter(words_, words_.begin()));
-        transform(it, {}, inserter(words_, words_.begin()), tolow);
+        transform(it, {}, inserter(words_, words_.begin()), to_low);
     }
 
     string data_;
