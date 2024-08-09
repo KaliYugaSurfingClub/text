@@ -48,7 +48,18 @@ vector<Sentence> split_into_sentences(string_view source) {
     return sentences;
 }
 
-vector<pair<string, set<string>>> get_statistic(string_view source, const unordered_set<string> &forbidden) {
+string get_text_from_stream(istream &is) {
+    string res;
+
+    is >> noskipws;
+    copy(istream_iterator<char>{is}, {}, back_inserter(res);
+    is.clear();
+
+    return res;
+}
+
+
+map<string, set<string>> get_statistic(string_view source, const unordered_set<string> &forbidden) {
     map<string, set<string>> mapped_statistic;
     vector<Sentence> sentences = split_into_sentences(source);
 
@@ -60,13 +71,38 @@ vector<pair<string, set<string>>> get_statistic(string_view source, const unorde
         }
     }
 
-    vector<pair<string, set<string>>> sorted_statistic(mapped_statistic.size());
-    ranges::copy(mapped_statistic, sorted_statistic.begin());
-    ranges::sort(sorted_statistic, [](const auto &p1, const auto &p2) {
-        return p1.second.size() > p2.second.size();
-    });
+//    vector<pair<string, set<string>>> sorted_statistic(mapped_statistic.size());
+//    ranges::copy(mapped_statistic, sorted_statistic.begin());
+//    ranges::sort(sorted_statistic, [](const auto &p1, const auto &p2) {
+//        return p1.second.size() > p2.second.size();
+//    });
 
-    return sorted_statistic;
+    return mapped_statistic;
+}
+
+vector<pair<string, set<string>>>
+get_statistic(const vector<filesystem::path> &paths, const unordered_set<string> &forbidden) {
+    map<string, set<string>> mapped_statistic;
+
+    if (paths.empty()) {
+        cout << "enter text\n";
+        mapped_statistic = get_statistic(get_text_from_stream(cin), forbidden);
+    }
+
+    vector<future<map<string, set<string>>>> futures(paths.size());
+    for (const auto &path: paths) {
+        ifstream is{path};
+        string text = get_text_from_stream(is);
+
+        futures.push_back(async([&]() {
+            return get_statistic(text, forbidden);
+        }));
+    }
+
+    vector<map<string, set<string>>> maps(futures.size());
+    for (const auto &future_map: futures) {
+        maps.push_back(std::move(future_map));
+    }
 }
 
 
